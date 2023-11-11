@@ -1,0 +1,82 @@
+name: SourceForge upload
+
+on:
+  workflow_dispatch:
+    inputs:
+        NIKGAPPS_VER:
+          description: 'NikGApps release date/version to download'
+          required: true
+          default: ''
+        SYSTEMLESSGAPPS_URL:
+          description: 'Systemless GApps repo to clone (edit if fork)'
+          required: true
+          default: 'https://github.com/chickendrop89/systemless-gapps'
+
+jobs:
+  build:
+    if: github.event.repository.owner.id == github.event.sender.id
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Check Out
+      uses: actions/checkout@v4
+
+    - name: SSH Known Hosts
+      uses: truemark/ssh-known-hosts-action@v1
+      with:
+        scan-hosts: web.sourceforge.net
+
+    - name: Set build date variable
+      run: |
+        echo "builddate=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+      id: date
+
+    - name: Clone Systemless GApps Repository
+      run: |
+        git clone --depth 1 ${{ github.event.inputs.SYSTEMLESSGAPPS_URL }} systemless-gapps
+          cd systemless-gapps
+          echo "workspace-folder=$(pwd)" >> $GITHUB_OUTPUT
+      id: pwd
+
+    - name: "Install Python and requirements"
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12' 
+    - run: pip install -r requirements.txt
+
+    - name: Download NikGApps Packages
+      run: |
+        python ./sf_download.py https://sourceforge.net/projects/nikgapps/files/Releases/NikGapps-T/${{ github.event.inputs.NIKGAPPS_VER }}/ nikgapps
+        python ./sf_download.py https://sourceforge.net/projects/nikgapps/files/Releases/NikGapps-R/${{ github.event.inputs.NIKGAPPS_VER }}/ nikgapps
+        python ./sf_download.py https://sourceforge.net/projects/nikgapps/files/Releases/NikGapps-SL/${{ github.event.inputs.NIKGAPPS_VER }}/ nikgapps
+      working-directory: ${{ steps.pwd.outputs.workspace-folder }}
+
+    - name: Build Systemless GApps Modules
+      run: |
+        jq '.magisk.version = "'"${{ github.event.inputs.NIKGAPPS_VER }}"'"' preferences.json > .tmp_preferences.json
+        mv .tmp_preferences.json preferences.json
+
+        for input in ${{ steps.pwd.outputs.workspace-folder }}/nikgapps/*.zip; 
+          do
+            python main.py "$input" release/
+        done
+      working-directory: ${{ steps.pwd.outputs.workspace-folder }}
+
+    - name: Publish Modules to SourceForge
+      run: |
+          sshpass -p ${{ secrets.SOURCEFORGE_PASSWORD }} rsync release/*.zip ${{ secrets.SOURCEFORGE_USERNAME }}@web.sourceforge.net:/home/frs/project/systemless-gapps/${{ github.event.inputs.NIKGAPPS_VER }}/
+      working-directory: ${{ steps.pwd.outputs.workspace-folder }}
+
+    - name: Create a GitHub relese
+      uses: softprops/action-gh-release@v1
+      with:
+        name: Systemless GApps ${{ github.event.inputs.NIKGAPPS_VER }}
+        tag_name: ${{ steps.date.outputs.builddate }}
+        body: |
+          NikGApps version: ${{ github.event.inputs.NIKGAPPS_VER }}
+          Build date: ${{ steps.date.outputs.builddate }}
+
+          [![Download Systemless GApps](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/systemless-gapps/files)
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
