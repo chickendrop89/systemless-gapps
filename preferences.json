@@ -1,0 +1,11 @@
+{
+    "magisk" : 
+        {
+            "id" : "SystemlessGApps",
+            "name" : "Systemless GApps",
+            "description" : "Systemless GApps package for Android",
+            "author" : "chickendrop89",
+            "version" : "(enter-version-here)",
+            "versionCode" : "1"
+        }
+}
