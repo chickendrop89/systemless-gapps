@@ -167,8 +167,7 @@ def createarchive():
     if not os.path.exists(outputDirectory):
         os.makedirs(outputDirectory)
 
-    # Typical output: M(N)G 07-Nov-2023 - NikGapps-stock-arm64-13-20231107-signed.zip
-    archivepath = f"{outputDirectory}/SG - {splitinputfilename} - {moduleVersion}"
+    archivepath = f"{outputDirectory}/SyG - {splitinputfilename} - {moduleVersion}"
     archivepath = archivepath.replace(".zip", "")
 
     # Delete existing archive if exists
