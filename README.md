@@ -48,7 +48,7 @@
    and might break `replaced` apps like `documentsui` or others..
  - If this happens, you might have to manually delete the replaced app folder at 
  ```shell
- /data/adb/modules/SystemlessGApps/system
+ /data/adb/modules/systemless-gapps/system
  ```
 
 ## Android Requirements

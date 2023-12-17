@@ -1,7 +1,7 @@
 {
     "magisk" : 
         {
-            "id" : "SystemlessGApps",
+            "id" : "systemless-gapps",
             "name" : "Systemless GApps",
             "description" : "Systemless GApps package for Android",
             "author" : "chickendrop89",
