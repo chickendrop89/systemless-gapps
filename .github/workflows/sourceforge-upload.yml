@@ -54,7 +54,7 @@ jobs:
 
     - name: Build Systemless GApps Modules
       run: |
-        jq '.magisk.version = "'"${{ github.event.inputs.NIKGAPPS_VER }}"'" | .magisk.versionCode = "'"$(echo "${{ github.event.inputs.NIKGAPPS_VER }}" | tr -d '-')"'"' preferences.json > .tmp_preferences.json
+        jq '.magisk.version = "'"${{ github.event.inputs.NIKGAPPS_VER }}"'"' preferences.json > .tmp_preferences.json
         mv .tmp_preferences.json preferences.json
 
         for input in ${{ steps.pwd.outputs.workspace-folder }}/nikgapps/*.zip; 
