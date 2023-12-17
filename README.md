@@ -53,7 +53,8 @@
 
 ## Android Requirements
  - Android 11+
- - 64-bit Architecture 
+ - 64-bit Architecture
+ - Either `Magisk 20.4+` or `KernelSU v0.6.7+`
 
 ## Credits
 
