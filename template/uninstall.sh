@@ -1,3 +1,9 @@
+# Clear package cache to prevent weird behaviour
+if [[ -e "/data/system/package_cache" ]]; 
+  then 
+    rm -rf /data/system/package_cache/*
+fi
+
 # Don't modify anything after this
 if [ -f $INFO ]; then
   while read LINE; do
