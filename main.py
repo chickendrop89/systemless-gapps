@@ -3,6 +3,8 @@ import sys
 import json
 import shutil
 import zipfile
+import tarfile
+import time
 import fnmatch
 
 from termcolor import cprint
@@ -113,15 +115,21 @@ def extractgapps():
         os.makedirs(appsetpath)
 
     rootpath = os.path.join("gapps", "AppSet")
-    pattern = "*.zip"
 
     for root, __dest, files in os.walk(rootpath):
-        for filename in fnmatch.filter(files, pattern):
+        for filename in fnmatch.filter(files, "*.zip"):
             cprint(f"Extracting {os.path.join(root, filename)}", "black", "on_magenta", attrs=["bold"])
             zipfile.ZipFile(os.path.join(root, filename)).extractall(appsetpath)
 
-            os.remove("appset/installer.sh")
-            os.remove("appset/uninstaller.sh")
+        for filename in fnmatch.filter(files, "*.tar.xz"):
+            cprint(f"Extracting {os.path.join(root, filename)}", "black", "on_magenta", attrs=["bold"])
+            with tarfile.open(os.path.join(root, filename), "r:xz") as tar:
+                for member in tar:
+                    member.mtime = time.time()  # Set mtime to current time
+                    tar.extract(member, path=appsetpath, filter="tar")
+
+    os.remove("appset/installer.sh")
+    os.remove("appset/uninstaller.sh")
 
     # Renames Files from ___ to /
     for filename in os.listdir(appsetpath):
