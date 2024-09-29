@@ -60,16 +60,16 @@ def cleanenvironment():
         pass
 
 
-with open('preferences.json', encoding="utf-8") as preferences:
+with open("preferences.json", encoding="utf-8") as preferences:
     contents = json.load(preferences)
 
     # Module properties
-    moduleId = contents['magisk']['id']
-    moduleName = contents['magisk']['name']
-    moduleVersion = contents['magisk']['version']
-    moduleVersionCode = contents['magisk']['versionCode']
-    moduleAuthor = contents['magisk']['author']
-    moduleDescription = contents['magisk']['description']
+    moduleId = contents["magisk"]["id"]
+    moduleName = contents["magisk"]["name"]
+    moduleVersion = contents["magisk"]["version"]
+    moduleVersionCode = contents["magisk"]["versionCode"]
+    moduleAuthor = contents["magisk"]["author"]
+    moduleDescription = contents["magisk"]["description"]
 
 
 def createmoduleprop():
@@ -115,7 +115,7 @@ def extractgapps():
     rootpath = os.path.join("gapps", "AppSet")
     pattern = "*.zip"
 
-    for root, dest, files in os.walk(rootpath):
+    for root, __dest, files in os.walk(rootpath):
         for filename in fnmatch.filter(files, pattern):
             cprint(f"Extracting {os.path.join(root, filename)}", "black", "on_magenta", attrs=["bold"])
             zipfile.ZipFile(os.path.join(root, filename)).extractall(appsetpath)
@@ -175,7 +175,7 @@ def createarchive():
         os.remove(archivepath)
 
     cprint("Building SystemlessGApps ZIP archive", "black", "on_green", attrs=["bold"])
-    shutil.make_archive(archivepath, 'zip', "builds")
+    shutil.make_archive(archivepath, "zip", "builds")
 
     # Print absolute archive path
     cprint(os.path.abspath(f"{archivepath}.zip"), "black", "on_green", attrs=["bold"])
