@@ -1,4 +1,4 @@
-![System-less GApps](sg.png "System-less GApps")
+![System-less GApps](.github/logo.png "System-less GApps")
 
  - A script that converts a **NikGApps** package into a **Magisk/KSU Module**.
  - This is my small fork of [MagiskGApps](https://github.com/wacko1805/MagiskGapps)
