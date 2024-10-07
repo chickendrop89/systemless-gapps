@@ -100,7 +100,7 @@ persistent=yes
 py-version=3.8
 
 # Discover python modules and packages in the file system subtree.
-recursive=no
+recursive=yes
 
 # Add paths to the list of the source roots. Supports globbing patterns. The
 # source root is an absolute path or a path relative to the current working
@@ -114,7 +114,7 @@ suggestion-mode=yes
 
 # Allow loading of arbitrary C extensions. Extensions are imported into the
 # active Python interpreter and may run arbitrary code.
-unsafe-load-any-extension=yes
+unsafe-load-any-extension=no
 
 # In verbose mode, extra non-checker-related info will be displayed.
 #verbose=
@@ -140,7 +140,8 @@ confidence=HIGH,
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
-disable=global-statement
+disable=global-statement,
+      missing-module-docstring
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -168,8 +169,7 @@ attr-naming-style=UPPER_CASE
 #attr-rgx=
 
 # Bad variable names which should always be refused, separated by a comma.
-bad-names=foo,
-          bar
+bad-names=
 
 # Bad variable names regexes, separated by a comma. If names match any regex,
 # they will always be refused
@@ -219,12 +219,7 @@ function-naming-style=camelCase
 #function-rgx=
 
 # Good variable names which should always be accepted, separated by a comma.
-good-names=i,
-           j,
-           k,
-           ex,
-           Run,
-           _
+good-names=_
 
 # Good variable names regexes, separated by a comma. If names match any regex,
 # they will always be accepted
@@ -299,7 +294,7 @@ defining-attr-methods=__init__,
 
 # List of member names, which should be excluded from the protected access
 # warning.
-exclude-protected=_asdict,_fields,_replace,_source,_make,os._exit
+exclude-protected=
 
 # List of valid names for the first argument in a class method.
 valid-classmethod-first-arg=cls
@@ -436,7 +431,7 @@ preferred-modules=
 
 # The type of string formatting that logging methods do. `old` means using %
 # formatting, `new` is for `{}` formatting.
-logging-format-style=old
+logging-format-style=new
 
 # Logging modules to check that the string format arguments are in logging
 # function parameter format.
@@ -447,15 +442,7 @@ logging-modules=logging
 
 # List of qualified names (i.e., library.method) which require a timeout
 # parameter e.g. 'requests.api.get,requests.api.post'
-timeout-methods=requests.api.delete,
-            requests.api.get,
-            requests.api.head,
-            requests.api.options,
-            requests.api.patch,
-            requests.api.post,
-            requests.api.put,
-            requests.api.request
-
+timeout-methods=
 
 [MISCELLANEOUS]
 
@@ -605,10 +592,7 @@ ignore-none=yes
 ignore-on-opaque-inference=yes
 
 # List of symbolic message names to ignore for Mixin members.
-ignored-checks-for-mixins=no-member,
-                        not-async-context-manager,
-                        not-context-manager,
-                        attribute-defined-outside-init
+ignored-checks-for-mixins=
 
 # List of class names for which member attributes should not be checked (useful
 # for classes with dynamically set attributes). This supports the use of
@@ -674,7 +658,4 @@ init-import=no
 
 # List of qualified module names which can have objects that can redefine
 # builtins.
-redefining-builtins-modules=six.moves,
-                        past.builtins,
-                        future.builtins,
-                        builtins,io
+redefining-builtins-modules=
