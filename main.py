@@ -56,9 +56,6 @@ def __coloredPrint(message_type: str, message: str):
             cprint(message, "white", "on_red", attrs=["bold"])
             sys.exit(1)
 
-if not sys.version_info >= (3, 8):
-    __coloredPrint("error", "this script requires python version to be above 3.8")
-
 try:
     # I/O Parameters
     input_filename   = os.path.abspath(sys.argv[1])

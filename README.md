@@ -37,6 +37,9 @@
  $ python main.py nikgapps-stock-arm64-13-20231107-signed.zip release/
  ```
 
+## Host Requirements
+ - Python 3.8+
+
 ## Android Requirements
  - Android 10+
  - 64-bit Architecture
