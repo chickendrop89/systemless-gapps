@@ -21,3 +21,6 @@ done
 
 # Rename this file, so magisk does not recognize it
 mv "$MODDIR/service.sh" "$MODDIR/__service.sh"
+
+su -lp 2000 -c "cmd notification post -S bigtext -t 'Systemless GApps - Installed' tag \
+'Systemless GApps were succesfully installed and post-installation scripts were executed'"
