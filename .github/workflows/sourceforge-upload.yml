@@ -15,7 +15,7 @@ on:
           required: true
         NIKGAPPS_ANDROID_REL_2:
           description: 'NikGApps android release version (2)'
-          required: true
+          required: false
 
 jobs:
   build:
@@ -54,8 +54,12 @@ jobs:
         sf_url=https://sourceforge.net/projects/nikgapps/files/Releases
         sf_script=$(pwd)/.github/sourceforge-folder-downloader/sf-downloader.sh
 
-        $sf_script $sf_url/${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }}/${{ github.event.inputs.NIKGAPPS_VER }} nikgapps-1
-        $sf_script $sf_url/${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}/${{ github.event.inputs.NIKGAPPS_VER }} nikgapps-2 2>/dev/null
+        $sf_script $sf_url/${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }}/${{ github.event.inputs.NIKGAPPS_VER }} nikgapps-1;
+
+        if [ -n "${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}" ];
+          then
+            $sf_script $sf_url/${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}/${{ github.event.inputs.NIKGAPPS_VER }} nikgapps-2;
+        fi
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Build Systemless GApps Modules
