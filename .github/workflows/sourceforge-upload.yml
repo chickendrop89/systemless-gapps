@@ -6,11 +6,16 @@ on:
         NIKGAPPS_VER:
           description: 'NikGApps release date/version to download'
           required: true
-          default: ''
         SYSTEMLESSGAPPS_URL:
           description: 'Systemless GApps repo to clone (edit if fork)'
           required: true
           default: 'https://github.com/chickendrop89/systemless-gapps'
+        NIKGAPPS_ANDROID_REL_1:
+          description: 'NikGApps android release version (1)'
+          required: true
+        NIKGAPPS_ANDROID_REL_2:
+          description: 'NikGApps android release version (2)'
+          required: true
 
 jobs:
   build:
@@ -34,9 +39,8 @@ jobs:
 
     - name: Clone Systemless GApps Repository
       run: |
-        git clone --depth 1 ${{ github.event.inputs.SYSTEMLESSGAPPS_URL }} systemless-gapps
-          cd systemless-gapps
-          echo "workspace-folder=$(pwd)" >> $GITHUB_OUTPUT
+        git clone --recurse-submodules ${{ github.event.inputs.SYSTEMLESSGAPPS_URL }} systemless-gapps
+        echo "workspace-folder=$(pwd)/systemless-gapps" >> $GITHUB_OUTPUT
       id: pwd
 
     - name: "Install Python and requirements"
@@ -47,17 +51,16 @@ jobs:
 
     - name: Download NikGApps Packages
       run: |
-        python ./sf_download.py https://sourceforge.net/projects/nikgapps/files/Releases/NikGapps-T/${{ github.event.inputs.NIKGAPPS_VER }}/ nikgapps
-        python ./sf_download.py https://sourceforge.net/projects/nikgapps/files/Releases/NikGapps-R/${{ github.event.inputs.NIKGAPPS_VER }}/ nikgapps
-        python ./sf_download.py https://sourceforge.net/projects/nikgapps/files/Releases/NikGapps-SL/${{ github.event.inputs.NIKGAPPS_VER }}/ nikgapps
+        sf_url=https://sourceforge.net/projects/nikgapps/files/Releases
+        sf_script=$(pwd)/.github/sourceforge-folder-downloader/sf-downloader.sh
+
+        $sf_script $sf_url/${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }}/${{ github.event.inputs.NIKGAPPS_VER }} nikgapps-1
+        $sf_script $sf_url/${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}/${{ github.event.inputs.NIKGAPPS_VER }} nikgapps-2 2>/dev/null
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Build Systemless GApps Modules
       run: |
-        jq '.magisk.version = "'"${{ github.event.inputs.NIKGAPPS_VER }}"'"' preferences.json > .tmp_preferences.json
-        mv .tmp_preferences.json preferences.json
-
-        for input in ${{ steps.pwd.outputs.workspace-folder }}/nikgapps/*.zip; 
+        for input in $(ls ${{ steps.pwd.outputs.workspace-folder }}/nikgapps*/*.zip); 
           do
             python main.py "$input" release/
         done

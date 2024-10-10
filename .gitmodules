@@ -1,0 +1,4 @@
+[submodule ".github/sourceforge-folder-downloader"]
+	path = .github/sourceforge-folder-downloader
+	url = https://github.com/chickendrop89/sourceforge-folder-downloader
+	shallow = true
