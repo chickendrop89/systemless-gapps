@@ -43,7 +43,7 @@ internal_directory_list = [appset_path, gapps_path, builds_path]
 
 def __printBanner():
     """Prints the 'Systemless GApps' banner"""
-    cprint(BANNER, "black", "on_green", attrs=["bold"])
+    __coloredPrint("info", BANNER)
 
 def __coloredPrint(message_type: str, message: str):
     """Prints colored output for desired type"""
@@ -204,6 +204,7 @@ def createArchive():
 
 if __name__ == "__main__":
     __printBanner()
+    __coloredPrint("info-dirs", input_filename)
     prepareEnvironment()
 
     # GApps
