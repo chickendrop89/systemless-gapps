@@ -1,10 +1,10 @@
 # Clear cache to prevent weird behaviour after uninstalling
-if [[ -e "/data/dalvik-cache" ]]; 
+if [ -e "/data/dalvik-cache" ]; 
   then 
     rm -rf "/data/dalvik-cache"
 fi
 
-if [[ -e "/data/system/package_cache" ]]; 
+if [ -e "/data/system/package_cache" ]; 
   then
     rm -rf /data/system/package_cache/*
 fi
