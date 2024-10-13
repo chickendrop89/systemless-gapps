@@ -16,7 +16,7 @@ ui_print "- Wiping cache to prevent undefined behaviour"
 wipe_cache
 
 trigger_setup_wizard(){
-    pm enable --user 0 "$SETUP_WIZARD_INTENT"
+    pm enable --user 0 "$SETUP_WIZARD_INTENT" > /dev/null
     settings put secure user_setup_complete 0
     settings put global device_provisioned 0
 }
