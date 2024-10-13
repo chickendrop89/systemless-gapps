@@ -54,25 +54,32 @@ jobs:
         sf_url=https://sourceforge.net/projects/nikgapps/files/Releases
         sf_script=$(pwd)/.github/sourceforge-folder-downloader/sf-downloader.sh
 
-        $sf_script $sf_url/${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }}/${{ github.event.inputs.NIKGAPPS_VER }} nikgapps-1;
+        $sf_script $sf_url/${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }}/${{ github.event.inputs.NIKGAPPS_VER }} ${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }};
 
         if [ -n "${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}" ];
           then
-            $sf_script $sf_url/${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}/${{ github.event.inputs.NIKGAPPS_VER }} nikgapps-2;
+            $sf_script $sf_url/${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}/${{ github.event.inputs.NIKGAPPS_VER }} ${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }};
         fi
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Build Systemless GApps Modules
       run: |
-        for input in $(ls ${{ steps.pwd.outputs.workspace-folder }}/nikgapps*/*.zip); 
+        directories=("${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }}" "${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}")
+
+        for input in $directories; 
           do
-            python main.py "$input" release/
+            python main.py $input/*.zip $input
         done
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Publish Modules to SourceForge
       run: |
-          sshpass -p ${{ secrets.SOURCEFORGE_PASSWORD }} rsync release/*.zip ${{ secrets.SOURCEFORGE_USERNAME }}@web.sourceforge.net:/home/frs/project/systemless-gapps/${{ github.event.inputs.NIKGAPPS_VER }}/
+        directories=("${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }}" "${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}")
+
+        for input in $directories; 
+          do
+            sshpass -p ${{ secrets.SOURCEFORGE_PASSWORD }} rsync $input/*.zip ${{ secrets.SOURCEFORGE_USERNAME }}@web.sourceforge.net:/home/frs/project/systemless-gapps/$input/${{ github.event.inputs.NIKGAPPS_VER }}/
+        done
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Create a GitHub relese
