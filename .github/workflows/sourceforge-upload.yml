@@ -69,7 +69,7 @@ jobs:
         find $directories -type f -print0 | while read -d $'\0' file; 
           do       
             for dirs in $directories;
-              do                                                                                        130 ↵
+              do
                 python main.py $file $dirs
             done
         done
