@@ -66,6 +66,11 @@ jobs:
       run: |
         directories=("${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }}" "${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}")
 
+        echo "----------"
+        echo $input
+        echo $input/*
+        echo "----------"
+
         for input in $directories; 
           do
             python main.py $input/*.zip $input
