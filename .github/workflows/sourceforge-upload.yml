@@ -66,14 +66,12 @@ jobs:
       run: |
         directories=("${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }}" "${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}")
 
-        for dirs in $directories; 
-          do
-            echo "----------"
-            echo $dirs
-            echo $dirs/*
-            echo "----------"
-
-            python main.py $dirs/*.zip $dirs
+        find $directories -type f -print0 | while read -d $'\0' file; 
+          do       
+            for dirs in $directories;
+              do                                                                                        130 ↵
+                python main.py $file $dirs
+            done
         done
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
@@ -81,9 +79,12 @@ jobs:
       run: |
         directories=("${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }}" "${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}")
 
-        for dirs in $directories; 
-          do
-            sshpass -p ${{ secrets.SOURCEFORGE_PASSWORD }} rsync $input/*.zip ${{ secrets.SOURCEFORGE_USERNAME }}@web.sourceforge.net:/home/frs/project/systemless-gapps/$dirs/${{ github.event.inputs.NIKGAPPS_VER }}/
+        find $directories -type f -print0 | while read -d $'\0' file; 
+          do       
+            for dirs in $directories;
+              do
+                sshpass -p ${{ secrets.SOURCEFORGE_PASSWORD }} rsync $file ${{ secrets.SOURCEFORGE_USERNAME }}@web.sourceforge.net:/home/frs/project/systemless-gapps/$dirs/${{ github.event.inputs.NIKGAPPS_VER }}/
+            done
         done
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
