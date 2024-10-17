@@ -1,0 +1,6 @@
+ro.url.legal.android_privacy=http://www.google.com/intl/%s/mobile/android/basic/privacy.html
+ro.url.legal=http://www.google.com/intl/%s/mobile/android/basic/phone-legal.html
+
+# RCS support
+persist.rcs.supported=1
+ro.com.google.acsa=true
