@@ -1,0 +1,65 @@
+allow gmscore_app privapp_data_file file execute
+allow gmscore_app priv_app tcp_socket { read write }
+allow gmscore_app system_linker_exec file execute_no_trans
+
+allow gmscore_app app_api_service service_manager find
+allow gmscore_app system_api_service service_manager find
+allow gmscore_app audioserver_service service_manager find
+allow gmscore_app cameraserver_service service_manager find
+allow gmscore_app drmserver_service service_manager find
+allow gmscore_app mediadrmserver_service service_manager find
+allow gmscore_app mediaextractor_service service_manager find
+allow gmscore_app mediametrics_service service_manager find
+allow gmscore_app mediaserver_service service_manager find
+allow gmscore_app network_watchlist_service service_manager find
+allow gmscore_app nfc_service service_manager find
+allow gmscore_app oem_lock_service service_manager find
+allow gmscore_app persistent_data_block_service service_manager find
+allow gmscore_app radio_service service_manager find
+allow gmscore_app recovery_service service_manager find
+allow gmscore_app stats_service service_manager find
+
+allow untrusted_app app_api_service service_manager find
+allow untrusted_app fwk_stats_hwservice hwservice_manager find
+allow untrusted_app color_display_service service_manager find
+allow untrusted_app hal_power_service service_manager find
+allow untrusted_app hal_power_default binder { call transfer }
+allow untrusted_app hal_power_client binder { receive call }
+allow untrusted_app statsd binder { receive call }
+allow untrusted_app gpuservice binder { receive call }
+allow untrusted_app stats_service_server binder { receive call }
+allow untrusted_app appdomain_tmpfs file { read write getattr map execute }
+allow untrusted_app servicemanager binder { call transfer }
+allow servicemanager untrusted_app binder { call transfer }
+allow servicemanager untrusted_app dir { search }
+allow servicemanager untrusted_app file { read open }
+allow servicemanager untrusted_app process { getattr }
+
+allow platform_app app_api_service service_manager find
+allow platform_app fwk_stats_hwservice hwservice_manager find
+allow platform_app color_display_service service_manager find
+allow platform_app hal_power_service service_manager find
+allow platform_app hal_power_default binder { call transfer }
+allow platform_app hal_power_client binder { receive call }
+allow platform_app statsd binder { receive call }
+allow platform_app gpuservice binder { receive call }
+allow platform_app stats_service_server binder { receive call }
+allow platform_app appdomain_tmpfs file { read write getattr map execute }
+allow platform_app servicemanager binder { call transfer }
+allow platform_app hal_power_service service_manager { find }
+
+allow priv_app app_api_service service_manager find
+allow priv_app fwk_stats_hwservice hwservice_manager find
+allow priv_app color_display_service service_manager find
+allow priv_app hal_power_service service_manager find
+allow priv_app hal_power_default binder { call transfer }
+allow priv_app hal_power_client binder { receive call }
+allow priv_app statsd binder { receive call }
+allow priv_app gpuservice binder { receive call }
+allow priv_app stats_service_server binder { receive call }
+allow priv_app appdomain_tmpfs file { read write getattr map execute }
+allow priv_app servicemanager binder { call transfer }
+allow priv_app hal_power_service service_manager { find }
+
+allow system_app logpersistd_logging_prop file { read }
+allow system_app logpersistd_logging_prop property_service { set }
