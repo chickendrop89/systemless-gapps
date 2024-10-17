@@ -6,10 +6,7 @@
 MODDIR=${0%/*}
 
 # Wait until system boot is completed
-while [ "$(getprop sys.boot_completed)" != "1" ]; 
-  do
-    sleep 1
-done
+resetprop -w sys.boot_completed 0
 
 # List all core *system* packages with "google" in their name.
 # This does not include user-installed google apps (such as YouTube)
