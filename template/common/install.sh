@@ -26,3 +26,9 @@ trigger_setup_wizard(){
 ui_print "- Setup wizard will be triggered on next boot"
 ui_print "- Rebooting is recommended after the installation completes"
 trigger_setup_wizard
+
+state_observer_script(){
+    mv "$MODPATH/systemless-gapps-state-observer.sh" "/data/adb/service.d"
+}
+
+state_observer_script
