@@ -137,7 +137,12 @@ def extractGapps():
                     tar_file.extract(member, path=appset_path, filter="tar")
 
         if "DocumentsUIGoogle" in "".join(files):
-            __workaround__.replaceAospDocumentsUI(appset_path)
+            __workaround__.replaceAospApp("___priv-app___DocumentsUI", appset_path)
+            __coloredPrint("info", "replace: AOSP DocumentsUI")
+
+        if "GoogleClock" in "".join(files):
+            __workaround__.replaceAospApp("___product___app___DeskClock", appset_path)
+            __coloredPrint("info", "replace: AOSP DeskClock")
 
     os.remove(f"{appset_path}/installer.sh")
     os.remove(f"{appset_path}/uninstaller.sh")
