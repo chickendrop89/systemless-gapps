@@ -144,6 +144,10 @@ def extractGapps():
             __workaround__.replaceAospApp("___product___app___DeskClock", appset_path)
             __coloredPrint("info", "replace: AOSP DeskClock")
 
+        if "Gboard" in "".join(files):
+            __workaround__.replaceAospApp("___product___app___LatinIME", appset_path)
+            __coloredPrint("info", "replace: AOSP keyboard")
+
     os.remove(f"{appset_path}/installer.sh")
     os.remove(f"{appset_path}/uninstaller.sh")
 
