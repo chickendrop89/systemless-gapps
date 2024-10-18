@@ -1,5 +1,7 @@
 __pycache__
+.appset
+.gapps
+.builds
 release
-appset
 out
 *.zip
