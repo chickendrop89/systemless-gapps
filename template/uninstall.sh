@@ -1,13 +1,6 @@
 # Clear cache to prevent weird behaviour after uninstalling
-if [ -e "/data/dalvik-cache" ]; 
-  then 
-    rm -rf "/data/dalvik-cache"
-fi
-
-if [ -e "/data/system/package_cache" ]; 
-  then
-    rm -rf /data/system/package_cache/*
-fi
+rm -rf /data/dalvik-cache
+rm -rf /data/system/package_cache/*
 
 # Don't modify anything after this
 if [ -f $INFO ]; then
