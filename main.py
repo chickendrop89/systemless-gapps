@@ -148,6 +148,10 @@ def extractGapps():
             __workaround__.replaceAospApp("___product___app___LatinIME", appset_path)
             __coloredPrint("info", "replace: AOSP keyboard")
 
+        if "WebViewGoogle" in "".join(files):
+            __workaround__.replaceAospApp("___product___app___webview", appset_path)
+            __coloredPrint("info", "replace: AOSP webview")
+
     os.remove(f"{appset_path}/installer.sh")
     os.remove(f"{appset_path}/uninstaller.sh")
 
