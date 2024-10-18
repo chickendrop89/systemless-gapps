@@ -3,6 +3,7 @@ import sys
 import shutil
 import tarfile
 import re
+import json
 import time
 import fnmatch
 
@@ -68,6 +69,27 @@ try:
 except IndexError:
     __printBanner()
     sys.exit(1)
+
+def __parseAospApps():
+    """Parses the JSON fields of aosp-apps.json"""
+    with open("aosp-apps.json", "r", encoding="utf-8") as data:
+        contents = json.load(data)
+
+    parsed_data = []
+
+    for item in contents:
+        google_app  = item["google_app"]
+        aosp_path   = item["aosp_path"]
+
+        if isinstance(aosp_path, list):
+            aosp_path = aosp_path[0]
+
+        parsed_data.append({
+            "google_app": google_app, 
+            "aosp_path": aosp_path
+        })
+
+    return parsed_data
 
 def cleanEnvironment():
     """Cleans environment of build-related folders"""
@@ -136,8 +158,15 @@ def extractGapps():
                     member.mtime = time.time()
                     tar_file.extract(member, path=appset_path, filter="tar")
 
-        if "DocumentsUIGoogle" in "".join(files):
-            __workaround__.replaceAospDocumentsUI(appset_path)
+        parsed_aosp_app_file = __parseAospApps()
+
+        for item in parsed_aosp_app_file:
+            google_app_name = item["google_app"]
+            aosp_path       = item["aosp_path"]
+
+            if google_app_name in "".join(files):
+                __workaround__.replaceAospApp(aosp_path, appset_path)
+                __coloredPrint("info", f"Replace: AOSP variant of {google_app_name}")
 
     os.remove(f"{appset_path}/installer.sh")
     os.remove(f"{appset_path}/uninstaller.sh")

@@ -9,29 +9,25 @@ def __coloredWorkaroundPrint(message: str):
     """Colored workaround print"""
     cprint(f"Workaround: {message}", "black", "on_green", attrs=["bold"])
 
-def replaceAospDocumentsUI(appsetpath: str):
+def replaceAospApp(app_path: str, appset_path: str):
     """
-        Google DocumentsUI package doesn't work if the AOSP variant is still installed
-        Replace it.
+        Some Google Apps don't work due to the roles already being occupied by
+        their AOSP relatives (ex. DocumentsUI), and require "replacing"
     """
-
-    documentsui_path = os.path.join(appsetpath, "___priv-app___DocumentsUI")
-    os.makedirs(documentsui_path)
+    aosp_app_path = os.path.join(appset_path, app_path)
+    os.makedirs(aosp_app_path)
 
     # pylint: disable=unspecified-encoding
-    with open(os.path.join(documentsui_path, ".replace"), "w") as __blank:
+    with open(os.path.join(aosp_app_path, ".replace"), "w") as __blank:
         pass
 
-    # Notify that the workaround was used
-    __coloredWorkaroundPrint("replace AOSP DocumentsUI")
-
-def preventDuplicateSystem(appsetpath: str):
+def preventDuplicateSystem(appset_path: str):
     """
         Pixel DPS sub-package (DevicePersonalizationServices.{zip, tar.gz})
         creates duplicate system directory (/system/system)
         Fix it, and prevent it from happening for other sub-packages as well
     """
-    system_path = os.path.join(appsetpath, "system")
+    system_path = os.path.join(appset_path, "system")
 
     for __dirpath, subdirs, __files in os.walk(system_path):
         # System subdirectory path (ex: "appset/system/etc")
@@ -45,7 +41,7 @@ def preventDuplicateSystem(appsetpath: str):
 
         shutil.move(
             f"{subdirectory}/{sub_subdirectory}",
-            f"{appsetpath}/{sub_subdirectory_parent}/{sub_subdirectory}"
+            f"{appset_path}/{sub_subdirectory_parent}/{sub_subdirectory}"
         )
         shutil.rmtree(system_path)
 
