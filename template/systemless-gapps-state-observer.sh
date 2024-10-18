@@ -7,6 +7,9 @@
 MAGISK_ADB_PATH=$(dirname "${0%/*}")
 MODULE_PATH=$MAGISK_ADB_PATH/modules/systemless-gapps
 
+# Wait until system boot is completed
+resetprop -w sys.boot_completed 0
+
 # If the module path doesn't exist anymore, self-destruct.
 if [ ! -d "$MODULE_PATH" ];
     then
