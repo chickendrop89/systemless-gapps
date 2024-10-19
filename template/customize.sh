@@ -14,7 +14,7 @@
 # Uncomment PARTITIONS and list additional partitions you will be modifying (other than system and vendor), for example: PARTITIONS="/odm /product /system_ext"
 MINAPI=34
 #MAXAPI=25
-DYNLIB=true
+#DYNLIB=true
 #PARTOVER=true
 PARTITIONS="/product"
 
