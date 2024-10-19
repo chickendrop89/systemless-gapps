@@ -2,5 +2,13 @@
     {
         "google_app": "DocumentsUI",
         "aosp_path": "___priv-app___DocumentsUI"
+    },
+    {
+        "google_app": "GoogleClock",
+        "aosp_path": "___product___app___DeskClock"
+    },
+    {
+        "google_app": "Gboard",
+        "aosp_path": "___product___app___LatinIME"
     }
 ]
