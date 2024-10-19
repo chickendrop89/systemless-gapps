@@ -4,9 +4,8 @@ SETUP_WIZARD_INTENT="com.google.android.setupwizard"
 SETUP_WIZARD_INTENT="$SETUP_WIZARD_INTENT/$SETUP_WIZARD_INTENT.SetupWizardActivity"
 
 wipe_cache(){
-    rm -rf /data/dalvik-cache
     rm -rf /data/system/package_cache/*
-    rm -rf /data/resource-cache/*
+    rm -rf /data/dalvik-cache
 }
 
 ui_print "- Wiping cache to prevent undefined behaviour"
