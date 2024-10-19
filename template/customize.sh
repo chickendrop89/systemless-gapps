@@ -46,9 +46,12 @@ REPLACE="
 MODDIR=${0%/*}
 
 set_permissions() {
-  set_perm "$SERVICE_D" 0 0 0744
   set_perm_recursive "$MODDIR" 0 0 0755 0644
-  
+
+  set_perm_recursive "$MODDIR/system/lib" 0 0 0755 0644 "u:object_r:system_lib_file:s0"
+  set_perm_recursive "$MODDIR/system/lib64" 0 0 0755 0644 "u:object_r:system_lib_file:s0"
+  set_perm "$SERVICE_D" 0 0 0744 "u:object_r:adb_data_file:s0"
+
   for i in "$MODDIR"/system/product/overlay "$MODDIR"/system/priv-app/* "$MODDIR"/system/app/*; do
       set_perm_recursive "$i" 0 0 0755 0644
   done
