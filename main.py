@@ -72,8 +72,11 @@ except IndexError:
 
 def __parseAospApps():
     """Parses the JSON fields of aosp-apps.json"""
-    with open("aosp-apps.json", "r", encoding="utf-8") as data:
-        contents = json.load(data)
+    try:
+        with open("aosp-apps.json", "r", encoding="utf-8") as data:
+            contents = json.load(data)
+    except FileNotFoundError:
+        return []
 
     parsed_data = []
 
@@ -135,6 +138,9 @@ def extractGapps():
     for dirpath, __subdirs, files in os.walk(f"{gapps_path}/AppSet"):
         # Some subpackages are compressed in zip, and some in tar.xz
 
+        # Parse the aosp-apps file
+        parsed_aosp_app_file = __parseAospApps()
+
         for filename in fnmatch.filter(files, "*.zip"):
             subpackage_path = os.path.join(dirpath, filename)
             printable_path  = os.path.relpath(subpackage_path)
@@ -158,15 +164,14 @@ def extractGapps():
                     member.mtime = time.time()
                     tar_file.extract(member, path=appset_path, filter="tar")
 
-        parsed_aosp_app_file = __parseAospApps()
+        if parsed_aosp_app_file is not None:
+            for item in parsed_aosp_app_file:
+                google_app_name = item["google_app"]
+                aosp_path       = item["aosp_path"]
 
-        for item in parsed_aosp_app_file:
-            google_app_name = item["google_app"]
-            aosp_path       = item["aosp_path"]
-
-            if google_app_name in "".join(files):
-                __workaround__.replaceAospApp(aosp_path, appset_path)
-                __coloredPrint("info", f"Replace: AOSP variant of {google_app_name}")
+                if google_app_name in "".join(files):
+                    __workaround__.replaceAospApp(aosp_path, appset_path)
+                    __coloredPrint("info", f"Replace: AOSP variant of {google_app_name}")
 
     os.remove(f"{appset_path}/installer.sh")
     os.remove(f"{appset_path}/uninstaller.sh")
