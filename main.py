@@ -169,7 +169,7 @@ def extractGapps():
                 google_app_name = item["google_app"]
                 aosp_path       = item["aosp_path"]
 
-                if google_app_name in "".join(files):
+                if re.search(google_app_name, "".join(files), re.IGNORECASE):
                     __workaround__.replaceAospApp(aosp_path, appset_path)
                     __coloredPrint("info", f"Replace: AOSP variant of {google_app_name}")
 
