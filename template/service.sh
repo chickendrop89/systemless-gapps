@@ -1,7 +1,7 @@
 #!/system/bin/sh
 
-# This is run only on the first boot with this module to set correct runtime permissions 
-# to core packages. Without it, basic features and apps are strangely broken
+# This is run only on the first boot with this module to set runtime permissions 
+# to core packages (and execute extras). Without it, basic features/apps are broken
 
 MODDIR=${0%/*}
 
@@ -15,6 +15,10 @@ for package in $(pm list packages -s -a | grep "google" | cut -d ":" -f 2);
         # Grant all permissions
         pm grant --all-permissions "$package"
 done
+
+# Extra: run a batch dexopt and do a cleanup 
+pm art dexopt-packages -r boot-after-ota
+pm art cleanup 
 
 # Rename this file, so magisk does not recognize it
 mv "$MODDIR/service.sh" "$MODDIR/__service.sh"
