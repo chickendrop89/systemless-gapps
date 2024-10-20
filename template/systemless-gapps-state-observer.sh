@@ -19,7 +19,7 @@ fi
 
 if [ -f "$MODULE_PATH/disable" ];
     then
-        pm disable com.google.android.gms
+        pm disable com.google.android.gms >/dev/null 2>&1
     else
-        pm enable com.google.android.gms
+        pm enable com.google.android.gms >/dev/null 2>&1
 fi
