@@ -1,6 +1,18 @@
+# Setup Wizard
+ro.setupwizard.rotation_locked=true
 ro.url.legal.android_privacy=http://www.google.com/intl/%s/mobile/android/basic/privacy.html
 ro.url.legal=http://www.google.com/intl/%s/mobile/android/basic/phone-legal.html
 
 # RCS support
 persist.rcs.supported=1
 ro.com.google.acsa=true
+
+# Gboard
+ro.com.google.ime.system_lm_dir=/system/usr/share/ime/google/d3_lms
+ro.com.google.ime.height_ratio=1.025
+ro.com.google.ime.theme_id=5
+ro.com.google.ime.kb_pad_port_b=8
+
+# GMS
+ro.error.receiver.system.apps=com.google.android.gms
+ro.atrace.core.services=com.google.android.gms,com.google.android.gms.ui,com.google.android.gms.persistent
