@@ -14,5 +14,6 @@ ro.com.google.ime.theme_id=5
 ro.com.google.ime.kb_pad_port_b=8
 
 # GMS
+ro.storage_manager.enabled=true
 ro.error.receiver.system.apps=com.google.android.gms
 ro.atrace.core.services=com.google.android.gms,com.google.android.gms.ui,com.google.android.gms.persistent
