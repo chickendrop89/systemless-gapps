@@ -10,9 +10,16 @@ MODULE_PATH=$MAGISK_ADB_PATH/modules/systemless-gapps
 # Wait until system boot is completed
 resetprop -w sys.boot_completed 0
 
-# If the module path doesn't exist anymore, self-destruct.
+# Check if module path doesn't exist
 if [ ! -d "$MODULE_PATH" ];
     then
+        # If GMS isn't installed as system app, uninstall it
+        if ! pm list packages -s -a | grep "com.google.android.gms" > /dev/null 2>&1; 
+            then
+                pm uninstall com.google.android.gms >/dev/null 2>&1
+        fi
+
+        # Self-destruct this script, and exit
         rm -- "$0"
         exit 0
 fi
