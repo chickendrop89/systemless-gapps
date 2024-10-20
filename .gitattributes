@@ -1,1 +1,7 @@
 * text=auto eol=lf
+
+*.sh diff=bash
+*.md diff=markdown
+*.py diff=python
+
+*.png binary
