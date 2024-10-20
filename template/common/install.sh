@@ -5,7 +5,7 @@ SETUP_WIZARD_INTENT="$SETUP_WIZARD_INTENT/$SETUP_WIZARD_INTENT.SetupWizardActivi
 
 wipe_cache(){
     rm -rf /data/system/package_cache/*
-    rm -rf /data/dalvik-cache
+    rm -rf /data/dalvik-cache/*
 }
 
 ui_print "- Wiping cache to prevent undefined behaviour"
