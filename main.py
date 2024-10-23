@@ -26,9 +26,8 @@ from zipfile import ZipFile
 from termcolor import cprint
 from pyaxmlparser import APK
 
-# Includes some lengthy workarounds for various issues
+# Include a list of AOSP package folders to replace
 from __packages__ import getPackageReplacement
-import __workaround__
 
 # Global variables. These will be overwritten later in the code
 MODULE_VERSION       = None
@@ -159,6 +158,31 @@ def extractGapps():
 
 def resolveGappsDirectories():
     """Translates subpackage dirnames to normal directories"""
+
+    def __preventDuplicateSystem():
+        """
+            Pixel DPS sub-package (DevicePersonalizationServices.{zip, tar.gz})
+            creates duplicate system directory (/system/system)
+            Fix it, and prevent it from happening for other sub-packages as well
+        """
+        system_path = os.path.join(appset_path, "system")
+
+        for __dirpath, subdirs, __files in os.walk(system_path):
+            # System subdirectory path (ex: "appset/system/etc")
+            subdirectory = os.path.join(system_path, *subdirs)
+
+            # Parent directory name of the sub-subdirectory (ex: "etc")
+            sub_subdirectory_parent = subdirectory.split("/")[-1]
+
+            # Sub-subdirectory name (ex: "textclassifier")
+            sub_subdirectory = os.listdir(subdirectory)[0]
+
+            shutil.move(
+                f"{subdirectory}/{sub_subdirectory}",
+                f"{appset_path}/{sub_subdirectory_parent}/{sub_subdirectory}"
+            )
+            shutil.rmtree(system_path)
+
     for filename in os.listdir(appset_path):
         src_file = os.path.join(appset_path, filename)
 
@@ -175,7 +199,7 @@ def resolveGappsDirectories():
             shutil.move(src_file, dst_file)
 
             if "system" in filename:
-                __workaround__.preventDuplicateSystem(appset_path)
+                __preventDuplicateSystem()
 
 def moveFoldersToModulePath():
     """Moves the extracted subpackages and the template to the builds directory"""
