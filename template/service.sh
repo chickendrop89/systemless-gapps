@@ -4,17 +4,28 @@
 # to core packages (and execute extras). Without it, basic features/apps are broken
 
 MODDIR=${0%/*}
+PACKAGE_LIST=${MODDIR}/extra/package_list.txt
 
 # Wait until system boot is completed
 resetprop -w sys.boot_completed 0
 
-# List all core *system* packages with "google" in their name.
-# This does not include user-installed google apps (such as YouTube)
-for package in $(pm list packages -s -a | grep "google" | cut -d ":" -f 2); 
-    do
-        # Grant all permissions
-        pm grant --all-permissions "$package" >/dev/null 2>&1
-done
+# We are getting rate-limited by audit.
+# Set SElinux to permissive (if it wasn't) for a brief moment
+if [ "$(getenforce)" = "Enforcing" ]; 
+    then
+        setenforce 0
+        WAS_ENABLED=1
+fi
+
+while IFS= read -r package; do
+    pm grant --all-permissions "$package"
+done < "$PACKAGE_LIST"
+
+# Re-enable it (if it was previously enabled)
+if [ "$WAS_ENABLED" -eq 1 ];
+    then
+        setenforce 1
+fi
 
 # Extra: run a batch dexopt and do a cleanup 
 pm art dexopt-packages -r boot-after-ota >/dev/null 2>&1
