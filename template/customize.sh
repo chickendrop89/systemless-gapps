@@ -16,7 +16,7 @@ MINAPI=34
 #MAXAPI=25
 #DYNLIB=true
 #PARTOVER=true
-PARTITIONS="/product"
+PARTITIONS="/system_ext /product /odm"
 
 SERVICE_D="/data/adb/service.d/systemless-gapps-state-observer.sh"
 
@@ -45,6 +45,7 @@ REPLACE="
 
 set_permissions() {
   set_perm_recursive $MODPATH 0 0 0755 0644
+  set_perm $MODPATH/extra/aosp_replace_util.sh 0 0 0700
 
   set_perm_recursive $MODPATH/system/lib 0 0 0755 0644 "u:object_r:system_lib_file:s0"
   set_perm_recursive $MODPATH/system/lib64 0 0 0755 0644 "u:object_r:system_lib_file:s0"
@@ -60,5 +61,6 @@ set_permissions() {
 ##########################################################################################
 
 SKIPUNZIP=1
+#unzip -qjo "$ZIPFILE" 'extra' -d $TMPDIR >&2
 unzip -qjo "$ZIPFILE" 'common/functions.sh' -d $TMPDIR >&2
 . $TMPDIR/functions.sh

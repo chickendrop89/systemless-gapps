@@ -9,18 +9,6 @@ def __coloredWorkaroundPrint(message: str):
     """Colored workaround print"""
     cprint(f"Workaround: {message}", "black", "on_green", attrs=["bold"])
 
-def replaceAospApp(app_path: str, appset_path: str):
-    """
-        Some Google Apps don't work due to the roles already being occupied by
-        their AOSP relatives (ex. DocumentsUI), and require "replacing"
-    """
-    aosp_app_path = os.path.join(appset_path, app_path)
-    os.makedirs(aosp_app_path)
-
-    # pylint: disable=unspecified-encoding
-    with open(os.path.join(aosp_app_path, ".replace"), "w") as __blank:
-        pass
-
 def preventDuplicateSystem(appset_path: str):
     """
         Pixel DPS sub-package (DevicePersonalizationServices.{zip, tar.gz})

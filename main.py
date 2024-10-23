@@ -3,14 +3,16 @@ import sys
 import shutil
 import tarfile
 import re
-import json
 import time
 import fnmatch
+import fileinput
 
 from zipfile import ZipFile
 from termcolor import cprint
+from pyaxmlparser import APK
 
 # Includes some lengthy workarounds for various issues
+from __packages__ import getPackageReplacement
 import __workaround__
 
 # Global variables. These will be overwritten later in the code
@@ -70,30 +72,6 @@ except IndexError:
     __printBanner()
     sys.exit(1)
 
-def __parseAospApps():
-    """Parses the JSON fields of aosp-apps.json"""
-    try:
-        with open("aosp-apps.json", "r", encoding="utf-8") as data:
-            contents = json.load(data)
-    except FileNotFoundError:
-        return []
-
-    parsed_data = []
-
-    for item in contents:
-        google_app  = item["google_app"]
-        aosp_path   = item["aosp_path"]
-
-        if isinstance(aosp_path, list):
-            aosp_path = aosp_path[0]
-
-        parsed_data.append({
-            "google_app": google_app, 
-            "aosp_path": aosp_path
-        })
-
-    return parsed_data
-
 def cleanEnvironment():
     """Cleans environment of build-related folders"""
     __coloredPrint("info", "Cleaning environment")
@@ -138,9 +116,6 @@ def extractGapps():
     for dirpath, __subdirs, files in os.walk(f"{gapps_path}/AppSet"):
         # Some subpackages are compressed in zip, and some in tar.xz
 
-        # Parse the aosp-apps file
-        parsed_aosp_app_file = __parseAospApps()
-
         for filename in fnmatch.filter(files, "*.zip"):
             subpackage_path = os.path.join(dirpath, filename)
             printable_path  = os.path.relpath(subpackage_path)
@@ -163,15 +138,6 @@ def extractGapps():
                     # Set subpackage create time to current time to walk around it
                     member.mtime = time.time()
                     tar_file.extract(member, path=appset_path, filter="tar")
-
-        if parsed_aosp_app_file is not None:
-            for item in parsed_aosp_app_file:
-                google_app_name = item["google_app"]
-                aosp_path       = item["aosp_path"]
-
-                if re.search(google_app_name, "".join(files), re.IGNORECASE):
-                    __workaround__.replaceAospApp(aosp_path, appset_path)
-                    __coloredPrint("info", f"Replace: AOSP variant of {google_app_name}")
 
     os.remove(f"{appset_path}/installer.sh")
     os.remove(f"{appset_path}/uninstaller.sh")
@@ -202,6 +168,29 @@ def moveFoldersToModulePath():
 
     shutil.copytree(template_path, builds_path, dirs_exist_ok=True)
     shutil.move(appset_path, f"{builds_path}/system")
+    
+def replaceAospApps():
+    """Replaces AOSP apps with GApps"""
+    aosp_replacer_script="extra/aosp_replace_util.sh"
+
+    def __replaceLine(old_line, new_line):
+        with fileinput.input(f"{builds_path}/{aosp_replacer_script}", inplace=True) as file:
+            for line in file:
+                if line.startswith(old_line):
+                    print(new_line, end="")
+                else:
+                    print(line, end="")
+
+    combined_arrays = []
+
+    for dirpath, __subdirs, files in os.walk(f"{builds_path}/system"):
+        for file in files:
+            if file.endswith(".apk"):
+                apk_path = os.path.join(dirpath, file)
+                package_name = APK(apk_path).package
+                combined_arrays.extend(getPackageReplacement(package_name))
+
+    __replaceLine("packages=()", f"packages=({' '.join(combined_arrays)})")
 
 def modifyModuleProps():
     """Modifies the version and versionCode to NikGApps version"""
@@ -247,6 +236,7 @@ if __name__ == "__main__":
 
     # Module
     moveFoldersToModulePath()
+    replaceAospApps()
     modifyModuleProps()
     createArchive()
 
