@@ -55,6 +55,7 @@ template_path = os.path.join(".", "template")
 appset_path   = os.path.join(".", ".appset")
 gapps_path    = os.path.join(".", ".gapps")
 builds_path   = os.path.join(".", ".builds")
+extra_folder  = os.path.join(builds_path, "extra")
 
 internal_directory_list = [appset_path, gapps_path, builds_path]
 
@@ -208,19 +209,26 @@ def moveFoldersToModulePath():
     shutil.copytree(template_path, builds_path, dirs_exist_ok=True)
     shutil.move(appset_path, f"{builds_path}/system")
     
+def __writePackageList(package_name: str):
+    """Writes package names to a file for further processing"""
+    package_list = "package_list.txt"
+
+    with open(f"{extra_folder}/{package_list}", "a", encoding="utf-8") as file:
+        file.write(f"{package_name}\n")
+
 def replaceAospApps():
     """Replaces AOSP apps with GApps"""
-    aosp_replacer_script="extra/aosp_replace_util.sh"
+    combined_arrays = []
 
-    def __replaceLine(old_line, new_line):
-        with fileinput.input(f"{builds_path}/{aosp_replacer_script}", inplace=True) as file:
+    def __replaceLine(old_line: str, new_line: str):
+        aosp_replacer_script = "aosp_replace_util.sh"
+
+        with fileinput.input(f"{extra_folder}/{aosp_replacer_script}", inplace=True) as file:
             for line in file:
                 if line.startswith(old_line):
                     print(new_line, end="")
                 else:
                     print(line, end="")
-
-    combined_arrays = []
 
     for dirpath, __subdirs, files in os.walk(f"{builds_path}/system"):
         for file in files:
@@ -228,6 +236,10 @@ def replaceAospApps():
                 apk_path = os.path.join(dirpath, file)
                 package_name = APK(apk_path).package
                 combined_arrays.extend(getPackageReplacement(package_name))
+
+                # While we're at it, we can also note the package names
+                # for further processing (ex. permissions)
+                __writePackageList(package_name)
 
     __replaceLine("packages=()", f"packages=({' '.join(combined_arrays)})")
 
