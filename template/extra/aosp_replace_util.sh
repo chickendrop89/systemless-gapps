@@ -12,20 +12,24 @@ search_dirs=(/system /vendor /product /odm /system_ext)
 # Todo: Hard-coded module path
 module_path=/data/adb/modules_update/systemless-gapps
 
+# Function to find directories and create overlays
 find_dirs() {
   __path="$1"
 
-  # Iterate through each directory in the current path
-  for dir in $__path; do
-    if [ -d "$dir" ]; then
+  # List directories in the current path
+  dirs=$(ls "$__path" 2> /dev/null)
+
+  # Iterate through each directory
+  for dir in $dirs; do
+    if [ -d "$__path/$dir" ]; then
       # Check if the directory name is in the packages array
       for package in "${packages[@]}"; do
         # Check if the directory name matches a package
-        if [ "$(basename "$dir")" == "$package" ]; then
-          overlay_system_dir="$module_path/system/$dir"
+        if [ "$dir" == "$package" ]; then
+          overlay_system_dir="$module_path/system/$__path/$dir"
 
-          if [[ "$dir" == *"system/"* ]]; then
-            overlay_system_dir="$module_path/$dir"
+          if [[ "$__path" == *"system/"* ]]; then
+            overlay_system_dir="$module_path/$__path/$dir"
           fi
 
           mkdir -p "$overlay_system_dir"
@@ -36,10 +40,12 @@ find_dirs() {
   done
 }
 
-for dir in "${search_dirs[@]}"; do
-  find_dirs "$dir/priv-app/*"
+for dir in "${search_dirs[@]}"; 
+  do
+    find_dirs "$dir/priv-app/"
 done
 
-for dir in "${search_dirs[@]}"; do 
-  find_dirs "$dir/app/*"
+for dir in "${search_dirs[@]}"; 
+  do
+    find_dirs "$dir/app/"
 done
