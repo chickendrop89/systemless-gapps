@@ -50,10 +50,6 @@ set_permissions() {
   set_perm_recursive $MODPATH/system/lib 0 0 0755 0644 "u:object_r:system_lib_file:s0"
   set_perm_recursive $MODPATH/system/lib64 0 0 0755 0644 "u:object_r:system_lib_file:s0"
   set_perm $SERVICE_D 0 0 0744 "u:object_r:adb_data_file:s0"
-
-  for i in $MODPATH/system/product/overlay $MODPATH/system/priv-app/* $MODPATH/system/app/*; do
-      set_perm_recursive "$i" 0 0 0755 0644
-  done
 }
 
 ##########################################################################################
