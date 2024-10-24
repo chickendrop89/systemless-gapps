@@ -43,7 +43,7 @@
 ## Android Requirements
  - Android 14+
  - 64-bit Architecture
- - Either `Magisk 20.4+` or `KernelSU v0.6.7+`
+ - Either `Magisk 27.0+` or `KernelSU v0.9.4+`
 
 ## Credits
 
