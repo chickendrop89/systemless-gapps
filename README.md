@@ -43,6 +43,7 @@
 ## Android Requirements
  - Android 14+
  - 64-bit Architecture
+ - Bash ([If not included in your ROM, download this](https://github.com/Magisk-Modules-Alt-Repo/mkshrc))
  - Either `Magisk 27.0+` or `KernelSU v0.9.4+`
 
 ## Credits
