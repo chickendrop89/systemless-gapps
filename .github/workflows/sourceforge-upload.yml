@@ -62,9 +62,9 @@ jobs:
       run: |
         directories=("${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }}" "${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}")
 
-        for dir in $directories;
+        for dir in "${directories[@]}"; 
           do
-            for zipfile in $dir/*.zip; 
+            for zipfile in "$dir"/*.zip;
               do
                 if [[ ! -f "$zipfile" ]]; 
                   then
@@ -80,9 +80,9 @@ jobs:
       run: |
         directories=("${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }}" "${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}")
 
-        for dir in $directories; 
+        for dir in "${directories[@]}"; 
           do
-            for zipfile in $dir/*.zip;
+            for zipfile in "$dir"/*.zip;
               do
                 if [[ ! -f "$zipfile" ]]; 
                   then
