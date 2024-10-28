@@ -15,7 +15,7 @@ on:
           required: true
         NIKGAPPS_ANDROID_REL_2:
           description: 'NikGApps android release version (2)'
-          required: false
+          required: true
 
 jobs:
   build:
@@ -55,20 +55,24 @@ jobs:
         sf_script=$(pwd)/.github/sourceforge-folder-downloader/sf-downloader.sh
 
         $sf_script $sf_url/${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }}/${{ github.event.inputs.NIKGAPPS_VER }} ${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }};
-
-        if [ -n "${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}" ];
-          then
-            $sf_script $sf_url/${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}/${{ github.event.inputs.NIKGAPPS_VER }} ${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }};
-        fi
+        $sf_script $sf_url/${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}/${{ github.event.inputs.NIKGAPPS_VER }} ${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }};
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Build Systemless GApps Modules
       run: |
         directories=("${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }}" "${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}")
 
-        for input in $directories; 
+        for dir in $directories;
           do
-            python main.py $input/*.zip $input
+            for zipfile in $dir/*.zip; 
+              do
+                if [[ ! -f "$zipfile" ]]; 
+                  then
+                    continue
+                fi
+
+                python main.py $zipfile $dir
+            done
         done
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
@@ -76,9 +80,17 @@ jobs:
       run: |
         directories=("${{ github.event.inputs.NIKGAPPS_ANDROID_REL_1 }}" "${{ github.event.inputs.NIKGAPPS_ANDROID_REL_2 }}")
 
-        for input in $directories; 
+        for dir in $directories; 
           do
-            sshpass -p ${{ secrets.SOURCEFORGE_PASSWORD }} rsync $input/*.zip ${{ secrets.SOURCEFORGE_USERNAME }}@web.sourceforge.net:/home/frs/project/systemless-gapps/$input/${{ github.event.inputs.NIKGAPPS_VER }}/
+            for zipfile in $dir/*.zip;
+              do
+                if [[ ! -f "$zipfile" ]]; 
+                  then
+                    continue
+                fi
+                
+                sshpass -p ${{ secrets.SOURCEFORGE_PASSWORD }} rsync $zipfile ${{ secrets.SOURCEFORGE_USERNAME }}@web.sourceforge.net:/home/frs/project/systemless-gapps/$dir/${{ github.event.inputs.NIKGAPPS_VER }}/
+            done
         done
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
