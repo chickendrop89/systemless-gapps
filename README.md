@@ -1,7 +1,7 @@
 ![System-less GApps](.github/logo.png "System-less GApps")
 
  - A script that converts a **NikGApps** package into a **Magisk/KSU Module**.
- - Periodical Updates at [SourceForge](https://sourceforge.net/projects/systemless-gapps/)
+ - ~~Periodical Updates at [SourceForge](https://sourceforge.net/projects/systemless-gapps/)~~
 
 ## Compatibility:
 
@@ -15,8 +15,8 @@
  - Systemless GApps can be disabled or installed temporarily 
  - It can be used to change other GApps packages previously installed, meaning a device with core gapps can be changed to stock without wiping the data partition
 
-## Automated Builds
-[![Download Systemless GApps](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/systemless-gapps/files)
+## ~~Automated Builds~~
+ - I will not be publishing a release until the bugs listed in **[KNOWN-BUGS.MD](https://github.com/chickendrop89/systemless-gapps/blob/master/KNOWN-BUGS.MD)** will be fixed
 
 ## Usage
  - [Download NikGApps Package](https://nikgapps.com/downloads)
