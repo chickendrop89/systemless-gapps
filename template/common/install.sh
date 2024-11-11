@@ -48,6 +48,11 @@ wipe_cache
 
 state_observer_script
 
-ui_print "- Setup wizard will be triggered on next boot"
-ui_print "- Rebooting is recommended after the installation completes"
-trigger_setup_wizard
+if [ ! -d "${MODPATH//_update/}" ]; 
+    then
+        ui_print "- Setup wizard will be triggered on next boot"
+        ui_print "- Rebooting is recommended after the installation completes"
+        trigger_setup_wizard
+    else
+        ui_print "- Existing installation detected, not triggering setup wizard"
+fi
