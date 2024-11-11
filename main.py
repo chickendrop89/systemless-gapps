@@ -184,6 +184,16 @@ def resolveGappsDirectories():
             )
             shutil.rmtree(system_path)
 
+    def __fixDirectories():
+        for file in os.listdir(dst_file):
+            if file.startswith("___"):
+                src_dir = os.path.join(dst_file, file)
+
+                for file2 in os.listdir(src_dir):
+                    shutil.move(os.path.join(src_dir, file2), dst_file)
+
+                shutil.rmtree(src_dir)
+
     for filename in os.listdir(appset_path):
         src_file = os.path.join(appset_path, filename)
 
@@ -198,6 +208,9 @@ def resolveGappsDirectories():
             shutil.move(src_file, replaceUnderscoresWith("product/"))
         else:
             shutil.move(src_file, dst_file)
+
+            if src_file.split("/", 2)[2] in os.listdir(dst_file):
+                __fixDirectories()
 
             if "system" in filename:
                 __preventDuplicateSystem()
