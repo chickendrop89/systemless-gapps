@@ -8,9 +8,6 @@ wipe_cache(){
     rm -rf /data/dalvik-cache/*
 }
 
-ui_print "- Wiping cache to prevent undefined behaviour"
-wipe_cache
-
 replace_aosp_apps(){
     if [ -f /system/bin/bash ]; 
         then
@@ -33,21 +30,24 @@ replace_aosp_apps(){
     $bash_path "$MODPATH/extra/aosp_replace_util.sh"
 }
 
-ui_print "- Replacing AOSP apps with their Google counterparts"
-replace_aosp_apps
-
 trigger_setup_wizard(){
     pm enable --user 0 "$SETUP_WIZARD_INTENT" >/dev/null 2>&1
     settings put secure user_setup_complete 0 >/dev/null 2>&1
     settings put global device_provisioned 0 >/dev/null 2>&1
 }
 
-ui_print "- Setup wizard will be triggered on next boot"
-ui_print "- Rebooting is recommended after the installation completes"
-trigger_setup_wizard
-
 state_observer_script(){
     cp "$MODPATH/extra/systemless-gapps-state-observer.sh" "/data/adb/service.d" >/dev/null 2>&1
 }
 
+ui_print "- Replacing AOSP apps with their Google counterparts"
+replace_aosp_apps
+
+ui_print "- Wiping cache to prevent undefined behaviour"
+wipe_cache
+
 state_observer_script
+
+ui_print "- Setup wizard will be triggered on next boot"
+ui_print "- Rebooting is recommended after the installation completes"
+trigger_setup_wizard
