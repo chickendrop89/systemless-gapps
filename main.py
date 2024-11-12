@@ -13,6 +13,7 @@
 
 #  Copyright (C) 2024  chickendrop89
 
+import argparse
 import os
 import sys
 import shutil
@@ -34,23 +35,6 @@ MODULE_VERSION       = None
 MODULE_VERSION_CODE  = None
 ARCHIVE_NAME         = None
 
-# Resize window to prefectly fit the banner
-sys.stdout.write("\x1b[8;35;96t")
-
-BANNER = r"""
-       _____           _                 _                  _____                          
-      / ____|         | |               | |                / ____|   /\                    
-     | (___  _   _ ___| |_ ___ _ __ ___ | | ___  ___ ___  | |  __   /  \   _ __  _ __  ___ 
-      \___ \| | | / __| __/ _ \ '_ ` _ \| |/ _ \/ __/ __| | | |_ | / /\ \ | '_ \| '_ \/ __|
-      ____) | |_| \__ \ ||  __/ | | | | | |  __/\__ \__ \ | |__| |/ ____ \| |_) | |_) \__ \
-     |_____/ \__, |___/\__\___|_| |_| |_|_|\___||___/___/  \_____/_/    \_\ .__/| .__/|___/
-              __/ |                                                       | |   | |        
-             |___/                                                        |_|   |_|        
-
-    * Systemless GApps by @chickendrop89              
-    * USAGE: python3 main.py <input: nikgapps package> <output directory>            
-"""
-
 template_path = os.path.join(".", "template")
 appset_path   = os.path.join(".", ".appset")
 gapps_path    = os.path.join(".", ".gapps")
@@ -59,13 +43,41 @@ extra_folder  = os.path.join(builds_path, "extra")
 
 internal_directory_list = [appset_path, gapps_path, builds_path]
 
-def __printBanner():
-    """Prints the 'Systemless GApps' banner"""
-    __coloredPrint("info", BANNER)
+BANNER = r"""
+ ___ _ _  ___ _|⎻|_ ___ ._ _ _ |⎻| ___  ___ ___ ___  ___  ___  ___  ___  ___
+<_-<| | |<_-<  | | / ._>| ' ' || |/ ._><_-<<_-<|___|/ . |<_> || . \| . \<_-<
+/__/`_. |/__/  |_| \___.|_|_|_||_|\___./__//__/     \_. |<___||  _/|  _//__/
+    <___'                                           <___'     |_|  |_|          
+"""
+
+parser = argparse.ArgumentParser(
+    formatter_class=argparse.RawDescriptionHelpFormatter, # For the banner
+    epilog="EXAMPLE: %(prog)s -i package.zip -o out",
+    description=BANNER
+)
+requiredGroup = parser.add_argument_group("required arguments")
+optionalGroup = parser.add_argument_group("optional arguments")
+
+requiredGroup.add_argument(
+    "-i", "--input",
+    type=str,
+    required=True,
+    help="Input NikGApps package archive (Zip format)"
+)
+requiredGroup.add_argument(
+    "-o", "--output-dir",
+    type=str,
+    required=True,
+    help="Output directory for the final archive"
+)
+
+arguments = parser.parse_args()
 
 def __coloredPrint(message_type: str, message: str):
     """Prints colored output for desired type"""
     match message_type:
+        case "banner":
+            cprint(message, attrs=["bold"])
         case "info":
             cprint(message, "black", "on_green", attrs=["bold"])
         case "info-dirs":
@@ -74,10 +86,14 @@ def __coloredPrint(message_type: str, message: str):
             cprint(message, "white", "on_red", attrs=["bold"])
             sys.exit(1)
 
+def __printBanner():
+    """Prints the 'Systemless GApps' banner"""
+    __coloredPrint("banner", BANNER)
+
 try:
     # I/O Parameters
-    input_filename   = os.path.abspath(sys.argv[1])
-    output_directory = os.path.abspath(sys.argv[2])
+    input_filename   = os.path.abspath(arguments.input)
+    output_directory = os.path.abspath(arguments.output_dir)
 
     if not os.path.exists(input_filename):
         raise IndexError
