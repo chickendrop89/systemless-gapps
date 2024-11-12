@@ -56,6 +56,10 @@ set_permissions() {
 # MMT Extended Logic - Don't modify anything after this
 ##########################################################################################
 
+if [ $IS64BIT = false ]; 
+  then abort "ERROR: Systemless-GApps packages are supported only on 64Bit devices"
+fi
+
 SKIPUNZIP=1
 #unzip -qjo "$ZIPFILE" 'extra' -d $TMPDIR >&2
 unzip -qjo "$ZIPFILE" 'common/functions.sh' -d $TMPDIR >&2
