@@ -70,6 +70,11 @@ requiredGroup.add_argument(
     required=True,
     help="Output directory for the final archive"
 )
+optionalGroup.add_argument(
+    "-dr", "--dont-replace-aosp-apps",
+    action="store_true",
+    help="Don't replace conflicting AOSP apps with the Module",
+)
 
 arguments = parser.parse_args()
 
@@ -264,6 +269,12 @@ def replaceAospApps():
                 __writePackageList(package_name)
 
     __replaceLine("packages=()", f"packages=({' '.join(combined_arrays)})")
+
+    # This will instruct the install script to not execute aosp_replace_util
+    # We will still let it fill for emergency scenarios.
+    if arguments.dont_replace_aosp_apps is True:
+        with open(f"{builds_path}/.DONT_REPLACE", "w", encoding="utf-8") as _unused:
+            pass
 
 def modifyModuleProps():
     """Modifies the version and versionCode to NikGApps version"""

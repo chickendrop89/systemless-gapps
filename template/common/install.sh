@@ -2,6 +2,7 @@
 
 SETUP_WIZARD_INTENT="com.google.android.setupwizard"
 SETUP_WIZARD_INTENT="$SETUP_WIZARD_INTENT/$SETUP_WIZARD_INTENT.SetupWizardActivity"
+EXTRA_DIR="$MODPATH/extra"
 
 wipe_cache(){
     rm -rf /data/system/package_cache/*
@@ -27,7 +28,7 @@ replace_aosp_apps(){
 
     # This script can't be rewritten to support (d)ash/posix-sh
     # While keeping it still readable. Try searching for a bash installation instead.
-    $bash_path "$MODPATH/extra/aosp_replace_util.sh"
+    $bash_path "$EXTRA_DIR/aosp_replace_util.sh"
 }
 
 trigger_setup_wizard(){
@@ -37,11 +38,16 @@ trigger_setup_wizard(){
 }
 
 state_observer_script(){
-    cp "$MODPATH/extra/systemless-gapps-state-observer.sh" "/data/adb/service.d" >/dev/null 2>&1
+    cp "$EXTRA_DIR/systemless-gapps-state-observer.sh" "/data/adb/service.d" >/dev/null 2>&1
 }
 
-ui_print "- Replacing AOSP apps with their Google counterparts"
-replace_aosp_apps
+if [ ! -f "$MODPATH/.DONT_REPLACE" ]; 
+    then
+        ui_print "- Replacing AOSP apps with their Google counterparts"
+        replace_aosp_apps
+    else
+        ui_print "- Not replacing AOSP apps, as requested during creation"
+fi
 
 ui_print "- Wiping cache to prevent undefined behaviour"
 wipe_cache
