@@ -75,6 +75,11 @@ optionalGroup.add_argument(
     action="store_true",
     help="Don't replace conflicting AOSP apps with the Module",
 )
+optionalGroup.add_argument(
+    "-fw", "--force-setup-wizard",
+    action="store_true",
+    help="Force setup wizard (don't check for installation)"
+)
 
 arguments = parser.parse_args()
 
@@ -277,6 +282,10 @@ def setPreferences():
     # We will still let it fill for emergency scenarios.
     if arguments.dont_replace_aosp_apps is True:
         with open(f"{builds_path}/.DONT_REPLACE", "w", encoding="utf-8") as _unused:
+            pass
+
+    if arguments.force_setup_wizard is True:
+        with open(f"{builds_path}/.FORCE_SW", "w", encoding="utf-8") as _unused:
             pass
 
 def modifyModuleProps():
