@@ -186,18 +186,19 @@ def resolveGappsDirectories():
 
                 shutil.rmtree(src_dir)
 
+    def __replaceUnderscores(string: str, replace_with: str):
+        """Replaces underscores within provided string"""
+        return string.replace("___", replace_with)
+
     for filename in os.listdir(appset_path):
         src_file = os.path.join(appset_path, filename)
 
-        def replaceUnderscoresWith(replace_with: str):
-            return src_file.replace("___", replace_with)
-
-        dst_file = replaceUnderscoresWith(os.sep)
+        dst_file = __replaceUnderscores(src_file, os.sep)
 
         # Short workarund:
         # /system/overlay is rejected by magisk, use /product/overlay instead
         if "overlay" in filename:
-            shutil.move(src_file, replaceUnderscoresWith("product/"))
+            shutil.move(src_file, __replaceUnderscores(src_file, "product/"))
         else:
             shutil.move(src_file, dst_file)
 
