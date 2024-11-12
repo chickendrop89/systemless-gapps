@@ -216,7 +216,7 @@ function-naming-style=camelCase
 # Regular expression matching correct function names. Overrides function-
 # naming-style. If left empty, function names will be checked with the set
 # naming style.
-#function-rgx=
+function-rgx=^(__)?([^\\W\\dA-Z][^\\W_]*|__[^\\W\\dA-Z_]\\w+__)$
 
 # Good variable names which should always be accepted, separated by a comma.
 good-names=_
@@ -241,7 +241,7 @@ method-naming-style=camelCase
 
 # Regular expression matching correct method names. Overrides method-naming-
 # style. If left empty, method names will be checked with the set naming style.
-method-rgx=([a-z][A-Za-z0-9]+)|(__[a-z][A-Za-z0-9]+)
+#method-rgx=
 
 # Naming style matching correct module names.
 module-naming-style=snake_case
