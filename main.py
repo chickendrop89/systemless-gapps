@@ -270,6 +270,9 @@ def replaceAospApps():
 
     __replaceLine("packages=()", f"packages=({' '.join(combined_arrays)})")
 
+def setPreferences():
+    """Sets preferences according to arguments passed"""
+
     # This will instruct the install script to not execute aosp_replace_util
     # We will still let it fill for emergency scenarios.
     if arguments.dont_replace_aosp_apps is True:
@@ -321,6 +324,7 @@ if __name__ == "__main__":
     # Module
     moveFoldersToModulePath()
     replaceAospApps()
+    setPreferences()
     modifyModuleProps()
     createArchive()
 
