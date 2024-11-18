@@ -38,7 +38,7 @@ trigger_setup_wizard(){
 }
 
 state_observer_script(){
-    cp "$EXTRA_DIR/systemless-gapps-state-observer.sh" "/data/adb/service.d" >/dev/null 2>&1
+    mv "$EXTRA_DIR/systemless-gapps-state-observer.sh" "/data/adb/service.d" >/dev/null 2>&1
 }
 
 if [ ! -f "$MODPATH/.DONT_REPLACE" ]; 
