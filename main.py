@@ -75,7 +75,16 @@ optionalGroup.add_argument(
     action="store_true",
     help="Don't replace conflicting AOSP apps with the Module",
 )
-optionalGroup.add_argument(
+
+# Don't allow these two commands to be passed at once
+setupExclusive = optionalGroup.add_mutually_exclusive_group()
+
+setupExclusive.add_argument(
+    "-dt", "--dont-trigger-setup-wizard",
+    action="store_true",
+    help="Don't trigger setup wizard after reboot"
+)
+setupExclusive.add_argument(
     "-fw", "--force-setup-wizard",
     action="store_true",
     help="Force setup wizard (don't check for installation)"
@@ -282,6 +291,10 @@ def setPreferences():
     # We will still let it fill for emergency scenarios.
     if arguments.dont_replace_aosp_apps is True:
         with open(f"{builds_path}/.DONT_REPLACE", "w", encoding="utf-8") as _unused:
+            pass
+
+    if arguments.dont_trigger_setup_wizard is True:
+        with open(f"{builds_path}/.DISABLE_SW", "w", encoding="utf-8") as _unused:
             pass
 
     if arguments.force_setup_wizard is True:

@@ -34,6 +34,8 @@
   optional arguments:
     -dr, --dont-replace-aosp-apps
                           Don't replace conflicting AOSP apps with the Module
+    -dt, --dont-trigger-setup-wizard
+                          Don't trigger setup wizard after reboot
     -fw, --force-setup-wizard
                           Force setup wizard (don't check for installation)
 

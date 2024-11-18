@@ -54,7 +54,11 @@ wipe_cache
 
 state_observer_script
 
-if [ ! -d "${MODPATH//_update/}" ] || [ -f "$MODPATH/.FORCE_SW" ]; 
+if [ -f "$MODPATH/.DISABLE_SW" ];
+    then
+        ui_print "- Not triggering setup wizard as requested during creation"
+        
+elif [ ! -d "${MODPATH//_update/}" ] || [ -f "$MODPATH/.FORCE_SW" ]; 
     then
         ui_print "- Setup wizard will be triggered on next boot"
         ui_print "- Rebooting is recommended after the installation completes"
