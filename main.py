@@ -156,7 +156,7 @@ def extractGapps():
 
         MODULE_VERSION      = f"{version_regex}"
         # Magisk doesn't tolerate dashes
-        MODULE_VERSION_CODE = f"{version_regex.replace("-", "")}"
+        MODULE_VERSION_CODE = f"{version_regex.replace('-', '')}"
         ARCHIVE_NAME        = f"systemless-gapps-{after_first_dash}"
 
         # Strip "-signed" from the archive name to reduce length
