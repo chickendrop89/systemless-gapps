@@ -237,7 +237,7 @@ def resolveGappsDirectories():
         else:
             shutil.move(src_file, dst_file)
 
-            if src_file.split("/", 2)[2] in os.listdir(dst_file):
+            if src_file.split(os.sep, 2)[2] in os.listdir(dst_file):
                 __fixDirectories()
 
             if "system" in filename:
