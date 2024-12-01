@@ -46,6 +46,7 @@ REPLACE="
 set_permissions() {
   set_perm_recursive $MODPATH 0 0 0755 0644
   set_perm $MODPATH/extra/aosp_replace_util.sh 0 0 0700
+  set_perm $MODPATH/extra/overlap_detect_util.sh 0 0 0700
 
   set_perm_recursive $MODPATH/system/lib 0 0 0755 0644 "u:object_r:system_lib_file:s0"
   set_perm_recursive $MODPATH/system/lib64 0 0 0755 0644 "u:object_r:system_lib_file:s0"

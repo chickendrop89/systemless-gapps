@@ -24,7 +24,8 @@ if [ ! -d "$MODULE_PATH" ];
         exit 0
 fi
 
-if [ -f "$MODULE_PATH/disable" ];
+# Disable GMS only if aren't overlapping existing *not system-less* package
+if [ -f "$MODULE_PATH/disable" ] && [ ! -f "/data/adb/.system_gapps_installation" ];
     then
         pm disable com.google.android.gms >/dev/null 2>&1
     else

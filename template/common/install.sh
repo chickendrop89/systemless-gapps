@@ -4,31 +4,37 @@ SETUP_WIZARD_INTENT="com.google.android.setupwizard"
 SETUP_WIZARD_INTENT="$SETUP_WIZARD_INTENT/$SETUP_WIZARD_INTENT.SetupWizardActivity"
 EXTRA_DIR="$MODPATH/extra"
 
-wipe_cache(){
-    rm -rf /data/system/package_cache/*
-    rm -rf /data/dalvik-cache/*
+if [ -f /system/bin/bash ]; 
+    then
+        bash_path="/system/bin/bash"
+elif [ -f /system_ext/bin/bash ];
+    then
+        # Optional/extra android partition
+        bash_path="/system_ext/bin/bash"
+elif [ -f /data/data/com.termux/files/usr/bin/bash ];
+    then
+        # Last resort. Might work if Termux is installed
+        bash_path="/data/data/com.termux/files/usr/bin/bash"
+else
+    ui_print "! No bash installation detected *anywhere*"
+    abort "! Please instal the 'mkshrc' magisk module, aborting"
+fi
+
+detect_overlap(){
+    $bash_path "$EXTRA_DIR/overlap_detect_util.sh"
+
+    if [ -f "/data/adb/.system_gapps_installation" ];
+        then ui_print "- Detected foreign GApps installation, not doing a cleanup on removal"
+    fi
 }
 
 replace_aosp_apps(){
-    if [ -f /system/bin/bash ]; 
-        then
-            bash_path="/system/bin/bash"
-    elif [ -f /system_ext/bin/bash ];
-        then
-            # Optional/extra android partition
-            bash_path="/system_ext/bin/bash"
-    elif [ -f /data/data/com.termux/files/usr/bin/bash ];
-        then
-            # Last resort. Might work if Termux is installed
-            bash_path="/data/data/com.termux/files/usr/bin/bash"
-    else
-        ui_print "! No bash installation detected *anywhere*"
-        abort "! Please instal the 'mkshrc' magisk module, aborting"
-    fi
-
-    # This script can't be rewritten to support (d)ash/posix-sh
-    # While keeping it still readable. Try searching for a bash installation instead.
     $bash_path "$EXTRA_DIR/aosp_replace_util.sh"
+}
+
+wipe_cache(){
+    rm -rf /data/system/package_cache/*
+    rm -rf /data/dalvik-cache/*
 }
 
 trigger_setup_wizard(){
@@ -41,6 +47,11 @@ state_observer_script(){
     mv "$EXTRA_DIR/systemless-gapps-state-observer.sh" "/data/adb/service.d" >/dev/null 2>&1
 }
 
+if [ ! -d "${MODPATH//_update/}" ] && [ ! -f "/data/adb/.system_gapps_installation" ]; 
+    then
+        detect_overlap
+fi
+
 if [ ! -f "$MODPATH/.DONT_REPLACE" ]; 
     then
         ui_print "- Replacing AOSP apps with their Google counterparts"
@@ -51,8 +62,6 @@ fi
 
 ui_print "- Wiping cache to prevent undefined behaviour"
 wipe_cache
-
-state_observer_script
 
 if [ -f "$MODPATH/.DISABLE_SW" ];
     then
@@ -66,3 +75,5 @@ elif [ ! -d "${MODPATH//_update/}" ] || [ -f "$MODPATH/.FORCE_SW" ];
     else
         ui_print "- Existing installation detected, not triggering setup wizard"
 fi
+
+state_observer_script
