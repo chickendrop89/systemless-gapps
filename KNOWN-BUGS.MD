@@ -6,6 +6,3 @@
 - 'Wallpapers & Styles' is not functional 
     - causing the option in settings to crash or disappear
     - [GitHub issue](https://github.com/chickendrop89/systemless-gapps/issues/3)
-
-- After uninstalling the module, some traces/apps still remain on the device
-    - specifically, data restore tool and ~~gms~~
