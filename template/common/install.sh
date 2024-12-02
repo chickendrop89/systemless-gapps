@@ -1,5 +1,9 @@
 #!/system/bin/sh
 
+################################
+#  Variables and declarations  #
+################################
+
 SETUP_WIZARD_INTENT="com.google.android.setupwizard"
 SETUP_WIZARD_INTENT="$SETUP_WIZARD_INTENT/$SETUP_WIZARD_INTENT.SetupWizardActivity"
 EXTRA_DIR="$MODPATH/extra"
@@ -19,6 +23,10 @@ else
     ui_print "! No bash installation detected *anywhere*"
     abort "! Please instal the 'mkshrc' magisk module, aborting"
 fi
+
+################################
+#          Functions           #
+################################
 
 detect_overlap(){
     $bash_path "$EXTRA_DIR/overlap_detect_util.sh"
@@ -46,6 +54,10 @@ trigger_setup_wizard(){
 state_observer_script(){
     mv "$EXTRA_DIR/systemless-gapps-state-observer.sh" "/data/adb/service.d" >/dev/null 2>&1
 }
+
+################################
+#    Conditions & Execution    #
+################################
 
 if [ ! -d "${MODPATH//_update/}" ] && [ ! -f "/data/adb/.system_gapps_installation" ]; 
     then
