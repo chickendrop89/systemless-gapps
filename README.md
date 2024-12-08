@@ -42,6 +42,10 @@
   example: main.py -i package.zip -o out
  ```
 
+## Notice
+ - Please disable `playintegrityfix` or similar modules affecting GMS before installing, [they can sometimes cause unexpected issues such as this](https://github.com/chickendrop89/systemless-gapps/issues/1).
+They can be installed again after the setup is complete.
+
 ## Android Requirements
  - Android 14+
  - 64-bit Architecture
